@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameControllerMovement : MonoBehaviour
 {
@@ -15,10 +16,14 @@ public class GameControllerMovement : MonoBehaviour
     
     public Vector3 spawnPosition;
 
+    public bool died = false;
+
+    public string NextLevel;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-
+    
 
 
     {
@@ -27,7 +32,19 @@ public class GameControllerMovement : MonoBehaviour
         spawnPosition = transform.position;
     }
 
+    private void FixedUpdate()
+    {
+        if (died)
+        {
+            Debug.Log("You died");
+            rb.position = spawnPosition;
+            died = false;
+        }
+    }
     // Update is called once per frame
+    
+    
+    
     void Update()
     {
        Vector3 movementInput = transform.right * Input.GetAxisRaw("Horizontal") + transform.forward * Input.GetAxisRaw("Vertical");
@@ -97,7 +114,15 @@ public class GameControllerMovement : MonoBehaviour
         if (collision.gameObject.tag == "Hazard") 
         {
             rb.position = spawnPosition;
+            died = true;
+            //rb.position = spawnPosition;
             Debug.Log("hurt");
+        }
+
+
+        if (collision.gameObject.tag == "Finish") 
+        {
+            SceneManager.LoadScene(NextLevel);
         }
 
         
@@ -112,10 +137,6 @@ public class GameControllerMovement : MonoBehaviour
 
 
     }
-   
-    
-
-
-
-    
 }
+
+
